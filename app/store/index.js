@@ -5,9 +5,7 @@ import rootReducer from '../reducers';
 
 let createStoreWithMiddleware = applyMiddleware(
     thunk,
-    createLogger({  //todo 
-      predicate: (getState, action) => process.env.NODE_ENV !== "production"
-    })
+    createLogger()
 )(createStore);
 
 

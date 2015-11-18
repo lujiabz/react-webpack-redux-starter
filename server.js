@@ -11,16 +11,13 @@ var async = require('async');
 var colors = require('colors');
 var mongoose = require('mongoose');
 var request = require('request');
-var React = require('react');
-var Router = require('react-router');
-var ReactDOM = require('react-dom/server');
 var _ = require('underscore');
 var router = require('./routers/router');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var httpProxy = require('http-proxy');
-var routes = require('./app/routes');
+var pageRender = require('./routers/pages');
 var swig  = require('swig');
 
 //mongodb start
@@ -103,7 +100,7 @@ app.use(express.static(path.join(__dirname, 'public')));
  * Returns 2 random characters of the same gender that have not been voted yet.
  */
 
-app.get('/',isAuthenticated,router.index);
+//app.get('/',isAuthenticated,router.index);
 
 //user api
 app.get('/login',isLogin,router.user.login);
@@ -136,31 +133,7 @@ if(node_env === 'devhotloader') {
     });
 }
 
-// app.use(isAuthenticated,function(req, res) {
-//     Router.match({ routes: routes.default, location: req.url }, function(err, redirectLocation, renderProps) {
-//         if (err) {
-//             res.status(500).send(err.message);
-//         } else if (redirectLocation) {
-//             res.status(302).redirect(redirectLocation.pathname + redirectLocation.search);
-//         } else if (renderProps) {
-
-//             var ele = React.createElement(Router.RoutingContext, renderProps);
-//             var html = ReactDOM.renderToString(ele);
-//             var page = swig.renderFile('public/www/index.html', { html: html });
-//             res.status(200).send(page);
-//         } else {
-//             res.status(404).send('Page Not Found');
-//         }
-//     });
-// });
-
-// app.use(function(req, res) {
-//     Router.run(routes, req.path, function(Handler) {
-//         var html = React.renderToString(React.createElement(Handler));
-//         var page = swig.renderFile('views/index.html', { html: html });
-//         res.send(page);
-//     });
-// });
+app.use(isAuthenticated,pageRender.render);
 
 app.use(function(err, req, res, next) {
   	res.status(err.status || 500);

@@ -1,7 +1,7 @@
 import { SESSION_USER } from "../constants/session";
 
 const initialState = {
-	username: 1111
+	username: ""
 }
 
 export default function sessionReducer (state = initialState, action) {

@@ -1,23 +1,24 @@
 import React, {Component}    from "react";
 import ReactDOM              from "react-dom";
 import {Router, Route, Link} from "react-router";
-// import createBrowserHistory from 'history/lib/createBrowserHistory';
-import createHashHistory     from "history/lib/createHashHistory";
+import createBrowserHistory from 'history/lib/createBrowserHistory';
+// import createHashHistory     from "history/lib/createHashHistory";
 import {Provider}            from "react-redux";
 import renderRoutes          from "./routes";
 import configureStore        from "./store";
 
-const store = configureStore(); //创建Redux Store实例
+var initialState = window.__INITIAL_STATE__;
+const store = configureStore(initialState); //创建Redux Store实例
 
 //定义一个根组件
 class Root extends Component {
 
   	constructor(props) {
     	super(props);
-    	// this.history = createBrowserHistory(); 
-    	this.history = createHashHistory({
-		  	queryKey: false
-		});
+    	this.history = createBrowserHistory(); 
+  //   	this.history = createHashHistory({
+		//   	queryKey: false
+		// });
  	}
 
   	render () {

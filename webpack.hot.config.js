@@ -1,5 +1,7 @@
 var path = require("path");
 var webpack = require("webpack");
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var pkg = require(path.join(process.cwd(), 'package.json'));
 
 var assetsPath = path.join(__dirname, "public");
 var publicPath = "/public/";
@@ -8,15 +10,30 @@ var WEBPACK_HOST = "localhost";
 var WEBPACK_PORT = 3001;
 
 var commonLoaders = [
-  {
-    /*
-     * TC39 categorises proposals for babel in 4 stages
-     * Read more http://babeljs.io/docs/usage/experimental/
-     */
-    test: /\.js$|\.jsx$/,
-    loaders: ["react-hot", "babel"],
-    include: path.join(__dirname, "app")
-  }
+    {
+        /*
+         * TC39 categorises proposals for babel in 4 stages
+         * Read more http://babeljs.io/docs/usage/experimental/
+         */
+        test: /\.js$|\.jsx$/,
+        loaders: ["react-hot", "babel"],
+        include: path.join(__dirname, "app")
+    },
+    {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract(
+          'css?sourceMap&-restructuring!' +
+          'autoprefixer-loader'
+        )
+    },
+    {
+        test: /\.less$/,
+        loader: ExtractTextPlugin.extract(
+          'css?sourceMap!' +
+          'autoprefixer-loader!' +
+          'less?{"sourceMap":true,"modifyVars":' + JSON.stringify(pkg.theme || {})+'}'
+        )
+    },
 ];
 
 module.exports = {
@@ -64,6 +81,10 @@ module.exports = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+        new webpack.NoErrorsPlugin(),
+        new ExtractTextPlugin('ant.css', {
+            disable: false,
+            allChunks: true
+        })
     ]
 };

@@ -1,15 +1,32 @@
 var path = require("path");
 var webpack = require("webpack");
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var pkg = require(path.join(process.cwd(), 'package.json'));
 
 var assetsPath = path.join(__dirname, "public","js");
 var publicPath = "/public/";
 
 var commonLoaders = [
-  {
-    test: /\.js$|\.jsx$/,
-    loaders: ["babel"],
-    include: path.join(__dirname, "app")
-  }
+    {
+        test: /\.js$|\.jsx$/,
+        loaders: ["babel"],
+        include: path.join(__dirname, "app")
+    },
+    {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract(
+          'css?sourceMap&-restructuring!' +
+          'autoprefixer-loader'
+        )
+    },
+    {
+        test: /\.less$/,
+        loader: ExtractTextPlugin.extract(
+          'css?sourceMap!' +
+          'autoprefixer-loader!' +
+          'less?{"sourceMap":true,"modifyVars":' + JSON.stringify(pkg.theme || {})+'}'
+        )
+    }
 ];
 
 module.exports = {
@@ -52,6 +69,10 @@ module.exports = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+        new webpack.NoErrorsPlugin(),
+        new ExtractTextPlugin('ant.css', {
+            disable: false,
+            allChunks: true
+        }),
     ]
 };

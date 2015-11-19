@@ -37,7 +37,6 @@ var chat = require('./work/chat.js').createChat(io);
 //登录认证 start
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var flash = require('express-flash');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var crypto = require('crypto');
@@ -85,7 +84,6 @@ app.use(cookieParser());
 app.use(session({secret: "need change"}));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash())
 //登录认证 end
 
 app.set('port', process.env.PORT || 3000);
